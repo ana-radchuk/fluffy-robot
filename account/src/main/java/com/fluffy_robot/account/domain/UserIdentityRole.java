@@ -1,5 +1,5 @@
 package com.fluffy_robot.account.domain;
 
-public enum IdentityRole {
+public enum UserIdentityRole {
     ROOT, ADMIN, USER;
 }

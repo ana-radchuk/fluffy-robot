@@ -11,21 +11,26 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "identities")
 @Data
 @NoArgsConstructor
-public class Identity implements UserDetails {
+public class UserIdentity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "account_id")
+    @Column(name = "user_identity_id")
     private Long id;
     private String name;
     private String email;
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private IdentityRole role;
+    private UserIdentityRole role;
+
+    public UserIdentity(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
