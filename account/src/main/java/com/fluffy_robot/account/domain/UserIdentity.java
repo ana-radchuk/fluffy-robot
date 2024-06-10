@@ -26,10 +26,14 @@ public class UserIdentity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserIdentityRole role;
 
-    public UserIdentity(String name, String email, String password) {
+    private Boolean locked = false;
+    private Boolean enabled = false;
+
+    public UserIdentity(String name, String email, String password, UserIdentityRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     @Override
@@ -46,5 +50,25 @@ public class UserIdentity implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

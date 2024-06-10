@@ -28,7 +28,7 @@ public class UserIdentityService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, username)));
     }
 
-    public String saveIdentity(UserIdentity userIdentity) {
+    public String saveUserIdentity(UserIdentity userIdentity) {
         boolean isPresent = userIdentityRepository.findByEmail(userIdentity.getEmail()).isPresent();
 
         if (isPresent) {
@@ -37,6 +37,8 @@ public class UserIdentityService implements UserDetailsService {
 
         String encodedPassword = bCryptPasswordEncoder.encode(userIdentity.getPassword());
         userIdentity.setPassword(encodedPassword);
+
+        userIdentityRepository.save(userIdentity);
 
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -47,10 +49,13 @@ public class UserIdentityService implements UserDetailsService {
         );
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        userIdentityRepository.save(userIdentity);
 
         // TODO: Send email
 
         return token;
+    }
+
+    public int enableUserIdentity(String email) {
+        return userIdentityRepository.enableUserIdentity(email);
     }
 }
