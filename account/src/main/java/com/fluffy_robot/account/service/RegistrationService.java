@@ -2,7 +2,7 @@ package com.fluffy_robot.account.service;
 
 import com.fluffy_robot.account.domain.ConfirmationToken;
 import com.fluffy_robot.account.domain.UserIdentity;
-import com.fluffy_robot.account.domain.RegistrationRequest;
+import com.fluffy_robot.account.domain.request.RegistrationRequest;
 import com.fluffy_robot.account.domain.UserIdentityRole;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

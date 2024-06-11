@@ -1,6 +1,6 @@
 package com.fluffy_robot.account.service;
 
-import com.fluffy_robot.account.domain.LoginRequest;
+import com.fluffy_robot.account.domain.request.LoginRequest;
 import com.fluffy_robot.account.domain.UserIdentity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
