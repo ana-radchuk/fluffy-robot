@@ -1,4 +1,4 @@
-package com.fluffy_robot.account.service;
+package com.fluffy_robot.account.service.core;
 
 import org.springframework.stereotype.Service;
 

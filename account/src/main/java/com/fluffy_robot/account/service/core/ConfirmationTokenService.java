@@ -1,4 +1,4 @@
-package com.fluffy_robot.account.service;
+package com.fluffy_robot.account.service.core;
 
 import com.fluffy_robot.account.domain.ConfirmationToken;
 import com.fluffy_robot.account.repository.ConfirmationTokenRepository;
@@ -25,25 +25,5 @@ public class ConfirmationTokenService {
 
     public void setConfirmedAt(String token) {
         confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
-    }
-
-    @Transactional
-    public ConfirmationToken confirmToken(String token) {
-        ConfirmationToken confirmationToken = getConfirmationToken(token)
-                .orElseThrow(() -> new IllegalStateException("Token not found"));
-
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("Email already confirmed");
-        }
-
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Token expired");
-        }
-
-        setConfirmedAt(token);
-
-        return confirmationToken;
     }
 }

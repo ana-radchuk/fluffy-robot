@@ -1,4 +1,4 @@
-package com.fluffy_robot.account.service;
+package com.fluffy_robot.account.service.core;
 
 import com.fluffy_robot.account.domain.ConfirmationToken;
 import com.fluffy_robot.account.domain.UserIdentity;
@@ -19,8 +19,6 @@ public class UserIdentityService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND = "User with email %s not found";
     private final UserIdentityRepository userIdentityRepository;
-    private final ConfirmationTokenService confirmationTokenService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -28,34 +26,15 @@ public class UserIdentityService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, username)));
     }
 
-    public String saveUserIdentity(UserIdentity userIdentity) {
-        boolean isPresent = userIdentityRepository.findByEmail(userIdentity.getEmail()).isPresent();
-
-        if (isPresent) {
-            throw new IllegalStateException("Email already taken");
-        }
-
-        String encodedPassword = bCryptPasswordEncoder.encode(userIdentity.getPassword());
-        userIdentity.setPassword(encodedPassword);
-
-        userIdentityRepository.save(userIdentity);
-
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(15),
-                userIdentity
-        );
-
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        // TODO: Send email
-
-        return token;
+    public boolean doesUserExist(UserIdentity userIdentity) {
+        return userIdentityRepository.findByEmail(userIdentity.getEmail()).isPresent();
     }
 
-    public int enableUserIdentity(String email) {
-        return userIdentityRepository.enableUserIdentity(email);
+    public void saveUser(UserIdentity userIdentity) {
+        userIdentityRepository.save(userIdentity);
+    }
+
+    public void enableUserIdentity(String email) {
+        userIdentityRepository.enableUserIdentity(email);
     }
 }

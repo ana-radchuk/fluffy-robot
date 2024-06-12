@@ -19,6 +19,6 @@ public interface UserIdentityRepository extends JpaRepository<UserIdentity, Long
     @Modifying
     @Query("UPDATE UserIdentity a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableUserIdentity(String email);
+    void enableUserIdentity(String email);
 
 }
