@@ -14,7 +14,7 @@ public class RegistrationController {
 
     @GetMapping("/")
     public String getHome() {
-        return "Home page";
+        return "Home";
     }
 
     @PostMapping("/register")

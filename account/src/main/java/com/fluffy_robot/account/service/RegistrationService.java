@@ -22,6 +22,7 @@ public class RegistrationService {
     private final UserIdentityService userIdentityService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailValidationService emailValidationService;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public String register(RegistrationRequest request) {
@@ -55,7 +56,9 @@ public class RegistrationService {
 
         // TODO: Send email
 
-        return "http://localhost:8080/api/v1/login/confirm?token=" + token;
+        String link = "http://localhost:8080/api/v1/login/confirm?token=" + token.getToken();
+
+        return "Register";
     }
 
     @Transactional
