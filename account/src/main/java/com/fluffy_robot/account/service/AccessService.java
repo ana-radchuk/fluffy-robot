@@ -2,6 +2,7 @@ package com.fluffy_robot.account.service;
 
 import com.fluffy_robot.account.domain.ConfirmationToken;
 import com.fluffy_robot.account.domain.UserIdentity;
+import com.fluffy_robot.account.domain.request.LoginRequest;
 import com.fluffy_robot.account.domain.request.RegistrationRequest;
 import com.fluffy_robot.account.domain.UserIdentityRole;
 import com.fluffy_robot.account.service.core.ConfirmationTokenService;
@@ -17,13 +18,13 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class RegistrationService {
+public class AccessService {
 
     private final UserIdentityService userIdentityService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailValidationService emailValidationService;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public String register(RegistrationRequest request) {
         boolean isValid = emailValidationService.test(request.getEmail());
@@ -43,7 +44,7 @@ public class RegistrationService {
             throw new IllegalStateException("Email already taken");
         }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
         userIdentityService.saveUser(user);
@@ -77,5 +78,18 @@ public class RegistrationService {
         userIdentityService.enableUserIdentity(confirmationToken.getUserIdentity().getEmail());
 
         return "Token confirmed";
+    }
+
+    public String login(LoginRequest request) {
+        UserIdentity user = (UserIdentity) userIdentityService.loadUserByUsername(request.getEmail());
+
+        if (user != null) {
+            if (request.getEmail().equalsIgnoreCase(user.getEmail()) &&
+                    passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                return "Login successful";
+            }
+        }
+
+        return "Login failed";
     }
 }
